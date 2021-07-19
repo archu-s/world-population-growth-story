@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <meta name="theme-color" content="#d9d9d9">
+    <title>Narrative Viz | D3 | End Of Population Growth</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.css">
+    <link href="https://fonts.googleapis.com/css?family=Merriweather|Muli:400|Muli:700" rel="stylesheet">
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body  onload='init()'>
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.js"></script>
+    <script src="app.js"></script>
+
+    <div id="viz-container" style="text-align: center; width: 100%; margin-top: 1rem;">      
+        <div class="change-countries" id="change-countries">
+            <button type="button" id="change-country-button" class="change-country-button">Change country</button> 
+        </div>
+        <div class="countries-selector" id="countries-selector">
+            <select class="countries-select" id="countries-select" disabled></select>
+        </div>
+        
+        <h1 id="viz-question">Ever the world population growth will come near to an end?</h1>
+        
+        <div id="viz-header" class="viz-header">
+            <p class="chart-header"></p>
+            <p class="chart-sub-header"></p>
+        </div>
+
+        <div class="tooltip" id="tooltip" style="position: absolute; 
+        pointer-events: none; left: 506.5px; top: 189.1px; 
+        white-space: nowrap; box-shadow: rgba(0, 0, 0, 0.12) 0px 2px 2px,
+         rgba(0, 0, 0, 0.306) 0px 0px 1px; border-radius: 2px; text-align: left; font-size: 0.9em; padding: 0.3em; opacity:0"></div>
+        <svg style="background: #f2f6f7;"></svg>
+
+        <div id="viz-msg">
+            <h2 class="msg population-msg">World's Population Growth</h2>
+            <p class="msg population-msg">Back in history in year 1950, the absolute increase of population was around 47 milion, and it was peaked in the late 1980s to over 90 million additional people each year. And it stayed high until recently.
+            </p>
+            <p class="msg population-msg"> The change in the world population is determined by two major metrics: the number of babies born, 
+                and the number of people dying. So to understand the likely trajectory for population growth lets see how births and deaths are changing.</p>
+
+            <h2 class="msg born-msg born-msg-1">How many are born each year?</h2>
+            <p class="msg born-msg born-msg-1">Back in history, in year 1950, there were around 97 million birth, and it increased to approx 138 million births per year in late 1980s.
+                And even now its around the same approx 140 million births - 43 million more than back in 1950.</p>
+            <p class="msg born-msg">As per medium variant of UN projections shown in above chart the yearly number of births will remain at around 140 million per year over the coming decades. It is then expected to slowly decline in the second-half of the century.</p>
+
+            <h2 class="msg die-msg die-msg-1">How many die each year?</h2>
+            <p class="msg die-msg die-msg-1">The number of deaths was around same since 1950 to till late 1990. And it has slightly increased since then. </p>
+            <p class="msg die-msg">As the <a heref="https://ourworldindata.org/age-structure">world population ages</a>, the annual number of deaths is expected to continue to increase in the coming decades until it reaches a similar annual number as global births towards the end of the century.</p>
+
+            <h2 class="msg end-pop-msg end-pop-msg-1">What does this mean for world population growth?</h2>
+            <p class="msg end-pop-msg end-pop-msg-1">As per medium variant of UN projections shown above, the number of births is expected to slowly fall and the number of deaths to rise, the global population growth rate will continue to fall.</p>
+            <p class="msg end-pop-msg"><span class="viz-ans">This is when the world population (as per the projection) will stop to increase in the future.</span></p>
+            <h2 class="msg explorer-msg">Explore By YourSelf</h2>
+            <p class="msg explorer-msg">To explore, it is possible to change the above view by changing the "Change Country" filter to any country or world region.
+                And a tooltip provided on mouse over to the chart above.
+            </p>
+        </div>
+
+        <div class="viz-footer" id="viz-footer">
+            <span class="spacebar-msg" id="spacebar-msg">Press [space bar] to continue.</span>
+            <div class="replay-msg" id="replay-msg"><span id="replay">Replay</span> | <a href="https://ourworldindata.org/future-population-growth#births-and-deaths">Data Source &amp; References</a></div>
+        </div>
+       
+    </div>
+</body>
+</html>

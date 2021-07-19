@@ -383,6 +383,15 @@ function transitionDottedLine(baseGroup, transitionData, xScale, yScale, xDataKe
     return { linePathGroup, dotGroup };
 }
 
+function hideLoadingMsg() {
+    loadingMsg = d3.selectAll("#loading-msg");
+    loadingMsg
+        .style("display", "block")
+        .style("opacity", 0)
+        .transition()
+        .style("opacity", 0);
+}
+
 function startViz() {
     vizQuestion = d3.selectAll("#viz-question");
     vizQuestion
@@ -391,7 +400,7 @@ function startViz() {
         .transition()
         .style("opacity", 1)
         .on("end", () => {
-            spacebarMsg = d3.select(".spacebar-msg");
+            spacebarMsg = d3.select("#spacebar-msg");
             spacebarMsg.style("opacity", 1);
         });
 }
@@ -1526,5 +1535,6 @@ async function init() {
     baseTransformedGroup = svg.append("g").attr("class", baseTransformGroupName).attr("transform", "translate(" + margin.left * 1.25 + ", " + margin.top + ")");
     addSpaceBarListner(SpaceBarPressedAction);
     populateCountriesFilter();
+    hideLoadingMsg();
     startViz();
 }

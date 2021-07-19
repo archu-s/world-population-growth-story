@@ -61,11 +61,11 @@
     font-size: 0.8em;
   }
 
-  .spacebar-msg {
+  #spacebar-msg {
     opacity: 0;
    }
 
-   .replay-msg {
+  #replay-msg {
     display: none;
     opacity: 0;
     cursor: pointer;

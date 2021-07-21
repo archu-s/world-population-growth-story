@@ -21,6 +21,39 @@ var countries;
 var currentCode;
 var dataWithForecast;
 
+const storyHeaders = {
+    "population": "World's Population Growth",
+    "birth": "How many are born each year?",
+    "death": "How many die each year?",
+    "story-summary": "What does this mean for world population growth?",
+    "explore": "Explore By YourSelf"
+}
+
+const storyMessages = {
+    "population-1": "Back in history in year 1950, the absolute increase of population was around 47 milion, and it was peaked " +
+        "in the late 1980s to over 90 million additional people each year. And it stayed high until recently.",
+    "population-2": "The change in the world population is determined by two major metrics: the number of babies born, " +
+        "and the number of people dying. So to understand the likely trajectory for population growth lets see how births and deaths are changing.",
+    "birth-1": "Back in history, in year 1950, there were around 97 million birth, and it increased to approx 138 million births per year in late 1980s." +
+        "And even now its around the same approx 140 million births - 43 million more than back in 1950.",
+    "birth-2": "As per medium variant of UN projections shown in above chart the yearly number of births will remain at around 140 million " +
+        "per year over the coming decades. It is then expected to slowly decline in the second-half of the century.",
+    "death-1": "The number of deaths was around same since 1950 to till late 1990. And it has slightly increased since then. ",
+    "death-2": 'As the world population ages, the annual number of deaths is expected to continue to ' +
+        'increase in the coming decades until it reaches a similar annual number as global births towards the end of the century.',
+    "st-1": "As per medium variant of UN projections shown above, the number of births is expected to slowly fall and the number of deaths to rise, the global population growth rate will continue to fall.",
+    "st-2": "As per UN projection, this is when the world population growth will stop to increase in the future...",
+    "explore": 'To explore, it is possible to change the above view by changing the "Change Country" filter to any country or world region.' +
+        'And a tooltip provided on mouse over to the chart above.'
+};
+
+const storyLineContent = 'Ever the world population growth will come near to an end?';
+const footerContContent = 'Press [space bar] to continue';
+const footerReplayContent = 'Replay';
+const footerDsr = 'Data Source & References';
+const dsrLink = 'https://ourworldindata.org/future-population-growth#births-and-deaths';
+
+
 //Formatting Utilities
 const parseDate = string => d3.utcParse("%Y-%m-%d")(string);
 const parseNA = string => (string === "NA" ? undefined : string);
@@ -120,66 +153,39 @@ function transitionSceneMessages() {
 }
 
 //Setup SVG
-function pageSetup() {
-    function calculateSize() {
-        var margin = Math.min(window.innerWidth, window.innerHeight) * 0.05;
-        var usableWidth = window.innerWidth - 2 * margin;
-        var usableHeight = (window.innerHeight - margin) * 0.65;
+function initialSetup() {
 
-        var idealAspectRatio = 16 / 9;
-        var availableAspectRatio = usableWidth / usableHeight;
-        var finalWidth = 0;
-        var finalHeight = 0;
-        if (availableAspectRatio > idealAspectRatio) {
-            finalHeight = usableHeight;
-            finalWidth = finalHeight * idealAspectRatio;
-        } else {
-            finalWidth = usableWidth;
-            finalHeight = finalWidth / idealAspectRatio;
-        }
+    const viewportWidth = window.innerWidth;
+    const viewportHeight = window.innerHeight;
+    var svgMargin = Math.min(viewportHeight, viewportWidth) * 0.05;
+    svgWidth = viewportWidth - 2 * svgMargin;
+    svgHeight = (viewportHeight - svgMargin) * 0.65;
 
-        return {
-            finalWidth: finalWidth,
-            finalHeight: finalHeight,
-            margin: margin
-        }
+    const aspectRatio = 16 / 9;
+    const currentAspectRatio = svgWidth / svgHeight;
+
+    if (currentAspectRatio > aspectRatio) {
+        svgWidth = svgHeight * aspectRatio;
+    } else {
+        svgHeight = svgWidth / aspectRatio;
     }
-
-    const size = calculateSize();
-    d3.select(".viz-container").style("margin-top", size.margin / 4 + "px");
-    d3.selectAll("h1").style("width", (size.finalWidth - size.margin * 0.5) + "px")
-        .style("margin-top", Math.round(size.margin / 4) + "px")
-        .style("display", "none")
-        .style("opacity", 0);
-    d3.selectAll("h2").style("width", (size.finalWidth - size.margin * 0.5) + "px")
-        .style("margin-top", Math.round(size.margin / 4) + "px")
-        .style("display", "none")
-        .style("opacity", 0);
-    d3.selectAll("p")
-        .style("width", (size.finalWidth - size.margin * 0.5) + "px")
-        .style("display", "none")
-        .style("opacity", 0);
-
 
     svg = d3.select("svg");
-    svg.attr("width", size.finalWidth).attr("height", size.finalHeight);
-    margin = {
-        top: size.margin * 1.5,
-        left: size.margin * 1.5,
-        bottom: size.margin * 1.5,
-        right: size.margin * 3.5
-    }
-    width = size.finalWidth - margin.left - margin.right;
-    height = size.finalHeight - margin.top - margin.bottom;
+    svg.attr("width", svgWidth).attr("height", svgHeight);
 
-    d3.select(".change-countries")
-        .style("margin-left", Math.round(size.margin * 3) + "px")
-        .style("width", width + "px")
-        .style("opacity", 0);
-    d3.select(".countries-selector")
-        .style("margin-left", Math.round(size.margin * 3) + "px")
-        .style("width", width + "px")
-        .style("opacity", 0);
+
+    margin = {
+        top: svgMargin * 1.5,
+        left: svgMargin * 1.5,
+        bottom: svgMargin * 1.5,
+        right: svgMargin * 3.5
+    }
+
+    width = svgWidth - margin.left - margin.right;
+    height = svgHeight - margin.top - margin.bottom;
+
+    d3.selectAll(".flex-container").style("width", svgWidth + "px");
+    d3.selectAll("h2").style("margin-top", Math.round(svgMargin / 4) + "px");
 
     return svg;
 }
@@ -392,27 +398,30 @@ function hideLoadingMsg() {
         .style("opacity", 0);
 }
 
-function startViz() {
-    vizQuestion = d3.selectAll("#viz-question");
-    vizQuestion
+function startStory() {
+    storyLine = d3.selectAll("#story-line");
+    storyLine
+        .transition()
+        .style("opacity", 0)
+        .text("")
+        .transition()
+        .text(storyLineContent)
         .style("display", "block")
         .style("opacity", 1)
-        .transition()
-        .style("opacity", 1)
         .on("end", () => {
-            spacebarMsg = d3.select("#spacebar-msg");
-            spacebarMsg.style("opacity", 1);
+            d3.select("#footer-content")
+                .text(footerContContent);
         });
 }
 
-function hideVizQuestion(OnEnd) {
-    vizQuestion = d3.select("#viz-question");
-    vizQuestion
+function hideStoryLine(OnEnd) {
+    storyLine = d3.select("#story-line");
+    storyLine
         .transition()
         .duration(500)
         .style("opacity", 0)
         .on("end", function () {
-            vizQuestion.style("opacity", 0)
+            storyLine.style("opacity", 0)
             OnEnd();
         });
 }
@@ -483,37 +492,54 @@ function DrawPopulationScene(code) {
 }
 
 function showPopMsg(endAction) {
-    const otherMsgs = d3.selectAll(".msg:not(.population-msg)");
-    const popMsg = d3.selectAll(".population-msg");
-    otherMsgs
-        .transition()
-      //  .duration(500)
-        .style("opacity", 0)
-        .style("display", "none")
+    const headerContent = d3.selectAll("#header-content");
+    headerContent
+        .text("")
+        .style("display", "block")
+        .style("opacity", "0")
+        .transition().duration(500)
         .on("end", () => {
-            popMsg
+
+            headerContent.text(storyHeaders["population"])
                 .style("display", "block")
-                .transition()
-                .duration(500)
-                .style("opacity", 1);
-        }
-        );
+                .style("opacity", "1");
+        });
+
+    const msgContent1 = d3.selectAll("#msg-content-1");
+    msgContent1
+        .text("")
+        .style("display", "block")
+        .style("opacity", "0")
+        .transition().duration(500)
+        .on("end", () => {
+            msgContent1.text(storyMessages["population-1"])
+                .style("display", "block")
+                .style("opacity", "1");
+        })
+
+    const msgContent2 = d3.selectAll("#msg-content-2");
+    msgContent2
+        .text("")
+        .style("display", "block")
+        .style("opacity", "0")
+        .transition().duration(500)
+        .on("end", () => {
+            msgContent2.text(storyMessages["population-2"])
+                .style("display", "block")
+                .style("opacity", "1");
+        })
 }
 
 function reset_header(headerContent, entityName) {
     headerContent = `${headerContent}, ${entityName}`;
 
-    d3.select(".chart-sub-header")
+    d3.select("#chart-header-content")
         .text("")
-        .style("font-size", "0.65em")
-        .style("margin-top", "0em")
-        // .style("margin-bottom", "0em")
         .style("display", "block")
         .style("opacity", "0");
 
-    d3.select(".chart-header")
+    d3.select("#chart-header-content")
         .text("")
-        //  .style("margin-bottom", "2em")
         .transition().duration(500)
         .text(headerContent)
         .style("display", "block")
@@ -521,15 +547,14 @@ function reset_header(headerContent, entityName) {
 }
 
 function add_sub_header() {
-    var header = d3.select(".chart-header")
+    d3.select("#chart-header-content")
         .style("margin-bottom", "0.2em");
     var projectionString = "From 2020 onwards this chart shows the UN Population Division projections.";
-    var subHeader = d3.select(".chart-sub-header");
+    var subHeader = d3.select("#chart-sub-header-content");
     subHeader.text("");
     subHeader
         .style("font-size", "0.55em")
         .style("margin-top", "0.1em")
-        //  .style("margin-bottom", "1em")
         .transition().duration(500)
         .text(projectionString)
         .style("display", "block")
@@ -538,7 +563,7 @@ function add_sub_header() {
 }
 
 function transition_header() {
-    var subHeader = d3.select(".chart-sub-header");
+    var subHeader = d3.select("#chart-sub-header-content");
     subHeader
         .transition().duration(500)
         .style("display", "block")
@@ -629,39 +654,50 @@ function drawBirthScene(code) {
     add_birth_annotation(nonForecastData);
 }
 
-function showBirthMsg1() {
-    const otherMsgs = d3.selectAll(".msg:not(.born-msg-1)");
-    const currentMsg = d3.selectAll(".born-msg-1");
-    otherMsgs
-        .transition()
-     //   .duration(500)
-        .style("opacity", 0)
-        .style("display", "none")
+function showBirthMsgs() {
+    const msgContent2 = d3.selectAll("#msg-content-2");
+    msgContent2
+        .text("")
+        .style("display", "block")
+        .style("opacity", "0")
+        .transition().duration(500)
         .on("end", () => {
-            currentMsg
+            msgContent2.text(storyMessages["population-2"])
                 .style("display", "block")
-                .transition()
-                .duration(500)
-                .style("opacity", 1)
-        }
-        );
+                .style("opacity", "1");
+        });
 }
 
-function showBirthMsgs() {
-    const otherMsgs = d3.selectAll(".msg:not(.born-msg)");
-    const currentMsg = d3.selectAll(".born-msg");
-    otherMsgs
-        .transition()
-       // .duration(500)
-        .style("opacity", 0)
-        .style("display", "none")
+function showBirthMsg1() {
+    const headerContent = d3.selectAll("#header-content");
+    headerContent
+        .text("")
+        .style("display", "block")
+        .style("opacity", "0")
+        .transition().duration(500)
         .on("end", () => {
-            currentMsg
+            headerContent.text(storyHeaders["birth"])
                 .style("display", "block")
-                .transition()
-                .duration(500)
-                .style("opacity", 1)
+                .style("opacity", "1");
         });
+
+    const msgContent1 = d3.selectAll("#msg-content-1");
+    msgContent1
+        .text("")
+        .style("display", "block")
+        .style("opacity", "0")
+        .transition().duration(500)
+        .on("end", () => {
+            msgContent1.text(storyMessages["birth-1"])
+                .style("display", "block")
+                .style("opacity", "1");
+        });
+
+    const msgContent2 = d3.selectAll("#msg-content-2");
+    msgContent2
+        .text("")
+        .style("display", "block")
+        .style("opacity", "0");
 }
 
 function add_birth_annotation(nonForecastData) {
@@ -908,40 +944,50 @@ function drawDeathScene(code) {
     add_death_annotation()
 }
 
-function showDeathMsg1() {
-    const otherMsgs = d3.selectAll(".msg:not(.die-msg-1)");
-    const currentMsg = d3.selectAll(".die-msg-1");
-    otherMsgs
-        .transition()
-       // .duration(500)
-        .style("opacity", 0)
-        .style("display", "none")
+function showDeathMsgs() {
+    const msgContent1 = d3.selectAll("#msg-content-2");
+    msgContent1
+        .text("")
+        .style("display", "block")
+        .style("opacity", "0")
+        .transition().duration(500)
         .on("end", () => {
-            currentMsg
+            msgContent1.text(storyMessages["death-2"])
                 .style("display", "block")
-                .transition()
-                .duration(500)
-                .style("opacity", 1)
-        }
-        );
+                .style("opacity", "1");
+        });
 }
 
-function showDeathMsgs() {
-    const otherMsgs = d3.selectAll(".msg:not(.die-msg)");
-    const currentMsg = d3.selectAll(".die-msg");
-    otherMsgs
-        .transition()
-     //   .duration(500)
-        .style("opacity", 0)
-        .style("display", "none")
+function showDeathMsg1() {
+    const headerContent = d3.selectAll("#header-content");
+    headerContent
+        .text("")
+        .style("display", "block")
+        .style("opacity", "0")
+        .transition().duration(500)
         .on("end", () => {
-            currentMsg
+            headerContent.text(storyHeaders["death"])
                 .style("display", "block")
-                .transition()
-                .duration(500)
-                .style("opacity", 1)
-        }
-        );
+                .style("opacity", "1");
+        });
+
+    const msgContent1 = d3.selectAll("#msg-content-1");
+    msgContent1
+        .text("")
+        .style("display", "block")
+        .style("opacity", "0")
+        .transition().duration(500)
+        .on("end", () => {
+            msgContent1.text(storyMessages["death-1"])
+                .style("display", "block")
+                .style("opacity", "1");
+        });
+
+    const msgContent2 = d3.selectAll("#msg-content-2");
+    msgContent2
+        .text("")
+        .style("display", "block")
+        .style("opacity", "0");
 }
 
 function add_death_annotation() {
@@ -1199,40 +1245,53 @@ function drawBirthAndDeathChart(code) {
         .text("Growth");
 }
 
-function showEndPopMsg1() {
-    const otherMsgs = d3.selectAll(".msg:not(.end-pop-msg-1)");
-    const currentMsg = d3.selectAll(".end-pop-msg-1");
-    otherMsgs
-        .transition()
-      //  .duration(500)
-        .style("opacity", 0)
-        .style("display", "none")
+function showEndPopMsgs() {
+    const msgContent2 = d3.selectAll("#msg-content-2");
+    msgContent2
+        .text("")
+        .style("display", "block")
+        .style("opacity", "0")
+        .transition().duration(500)
         .on("end", () => {
-            currentMsg
-                .style("display", "block")
-                .transition()
-                .duration(500)
-                .style("opacity", 1)
-        }
-        );
+            msgContent2.text(storyMessages["st-2"])
+                //  .style("display", "block")
+                .style("font-style", "italic")
+                .style("font-weight", "bold")
+                .style("display", "block !important")
+                .style("opacity", "1");
+        });
 }
 
-function showEndPopMsgs() {
-    const otherMsgs = d3.selectAll(".msg:not(.end-pop-msg)");
-    const currentMsg = d3.selectAll(".end-pop-msg");
-    otherMsgs
-        .transition()
-      //  .duration(500)
-        .style("opacity", 0)
-        .style("display", "none")
+function showEndPopMsg1() {
+    const headerContent = d3.selectAll("#header-content");
+    headerContent
+        .text("")
+        .style("display", "block")
+        .style("opacity", "0")
+        .transition().duration(500)
         .on("end", () => {
-            currentMsg
+            headerContent.text(storyHeaders["story-summary"])
                 .style("display", "block")
-                .transition()
-                .duration(500)
-                .style("opacity", 1)
-        }
-        );
+                .style("opacity", "1");
+        });
+
+    const msgContent1 = d3.selectAll("#msg-content-1");
+    msgContent1
+        .text("")
+        .style("display", "block")
+        .style("opacity", "0")
+        .transition().duration(500)
+        .on("end", () => {
+            msgContent1.text(storyMessages["st-1"])
+                .style("display", "block")
+                .style("opacity", "1");
+        });
+
+    const msgContent2 = d3.selectAll("#msg-content-2");
+    msgContent2
+        .text("")
+        .style("display", "block")
+        .style("opacity", "0");
 }
 
 function birth_death_annotation() {
@@ -1292,21 +1351,35 @@ function explorerScene(code) {
 }
 
 function showExplorerMsgs() {
-    const otherMsgs = d3.selectAll(".msg:not(.explorer-msg)");
-    const currentMsg = d3.selectAll(".explorer-msg");
-    otherMsgs
-        .transition()
-    //    .duration(500)
-        .style("opacity", 0)
-        .style("display", "none")
+    const headerContent = d3.selectAll("#header-content");
+    headerContent
+        .text("")
+        .style("display", "block")
+        .style("opacity", "0")
+        .transition().duration(500)
         .on("end", () => {
-            currentMsg
+            headerContent.text(storyHeaders["explore"])
                 .style("display", "block")
-                .transition()
-                .duration(500)
-                .style("opacity", 1)
-        }
-        );
+                .style("opacity", "1");
+        });
+
+    const msgContent1 = d3.selectAll("#msg-content-1");
+    msgContent1
+        .text("")
+        .style("display", "block")
+        .style("opacity", "0")
+        .transition().duration(500)
+        .on("end", () => {
+            msgContent1.text(storyMessages["explore"])
+                .style("display", "block")
+                .style("opacity", "1");
+        });
+
+    const msgContent2 = d3.selectAll("#msg-content-2");
+    msgContent2
+        .text("")
+        .style("display", "block")
+        .style("opacity", "0");
 }
 
 function explorerSceneToolTip(code) {
@@ -1433,13 +1506,17 @@ function drawExplorerScene(code) {
 
     d3.select(".change-country-button")
         .on('click', () => {
-            d3.select(".change-country-button").style("opacity", 0);
+            d3.select(".change-country-button")
+                // .text("Select Country")
+                .style("opacity", 0);
         });
 
     d3.select(".countries-select")
         .property('disabled', false)
         .on('change', () => {
-            d3.select(".change-country-button").style("opacity", 1);
+            d3.select(".change-country-button")
+                //   .text("Change Country")
+                .style("opacity", 1);
             selectValue = d3.select('select').property('value');
             console.log(d3.select('select').property('value'))
             explorerScene(selectValue);
@@ -1464,7 +1541,7 @@ function addSpaceBarListner(onPressAction) {
 function SpaceBarPressedAction() {
     spaceBarPressCount = spaceBarPressCount + 1;
     if (spaceBarPressCount === 1) {
-        hideVizQuestion(() => {
+        hideStoryLine(() => {
             showPopMsg();
             DrawPopulationScene(default_filter_code);
         })
@@ -1520,6 +1597,23 @@ function SpaceBarPressedAction() {
             replayBtn.on('click', function () {
                 location.reload();
             });
+
+            d3.select("#footer-content")
+            .attr("class", "clickable")
+            .text(footerReplayContent)
+            .on('click', function () {
+                location.reload();
+            });
+
+            d3.select("#footer")
+            .append("span")
+            .text(" | ");
+
+            d3.select("#footer")
+            .append("a")
+            .attr("href", dsrLink)
+            .text(footerDsr)
+            .style("color", "#959595;");
         });
     }
 
@@ -1531,10 +1625,10 @@ function SpaceBarPressedAction() {
 async function init() {
     const populationGrowthData = await d3.csv("data/population-growth-the-annual-change-of-the-population.csv", formatPopulationGrowthData);
     data = await d3.csv("data/births-and-deaths-projected-to-2100.csv", (d) => formatAndCombineData(d, populationGrowthData));
-    svg = pageSetup();
-    baseTransformedGroup = svg.append("g").attr("class", baseTransformGroupName).attr("transform", "translate(" + margin.left * 1.25 + ", " + margin.top + ")");
+    svg = initialSetup();
+    baseTransformedGroup = svg.append("g").attr("class", baseTransformGroupName)
+        .attr("transform", "translate(" + margin.left * 1.25 + ", " + margin.top + ")");
     addSpaceBarListner(SpaceBarPressedAction);
     populateCountriesFilter();
-    hideLoadingMsg();
-    startViz();
+    startStory();
 }

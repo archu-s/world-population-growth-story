@@ -1,119 +1,122 @@
-  body, html {
-    background: #f2f4f7;
-    color: #011627;
-    font-family: 'Muli', "Helvetica Neue", Helvetica, sans-serif;
-  }
+body, html {
+  background: #f2f4f7;
+  color: #011627;
+  font-family: 'Muli', "Helvetica Neue", Helvetica, sans-serif;
+}
 
-  #viz-question {
-    position: absolute;
-    top: 40%;
-    margin: 100px auto;
-    width: 100% !important;
-    text-align: center !important;
-    display: block;
-  }
+.container {
+  text-align: center; 
+  width: 100%;
+  margin-top: 1.5rem;
+}
 
-  h1 {
-    font-family: 'Merriweather', serif;
-    text-align: left;
+.story-line {
+  position: absolute;
+  top: 40%;
+  margin: 2rem auto;
+  width: 100% !important;
+  text-align: center !important;
+  display: block;
+}
+
+.footer {
+  position: absolute;
+  bottom: 0;
+  margin-top: -32px;
+  height: 32px;
+  color: #959595;
+  width: 100%;
+  text-align: center;
+  font-style: italic;
+  font-size: 0.8em;
+}
+
+h1 {
+  font-family: 'Merriweather', serif;
+  text-align: left;
+  margin: auto;
+}
+
+h2 {
+  font-family: 'Merriweather', serif;
+  text-align: left;
     margin: auto;
-    opacity: 0;
-    display: none;
-  }
+}
 
-  h2 {
-    font-family: 'Merriweather', serif;
-    text-align: left;
-    margin: auto;
-    opacity: 0;
-    display: none;
-  }
+.flex-container {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  margin: auto;
+}
 
-  p {
-    font-family: 'Muli', "Helvetica Neue", Helvetica, sans-serif;
-    display: none;
-    text-align: left;
-    margin: 0.75em auto;
-    opacity: 0;
-  }
+.msg-container {
+  margin-right: 1rem;
+  flex: 70%;
+}
 
-  svg text {
-    font-family: 'Muli', "Helvetica Neue", Helvetica, sans-serif;
-    color: #011627;
-    fill: #011627;
-  }
+.chart-container {
+  margin-left: 1rem;
+ flex: 50%;
 
-  .viz-ans {
-    font-style: italic;
-    font-weight: bold;
-    display: inline !important;
-  }
+}
 
-  .viz-footer {
-    position: absolute;
-    bottom: 0;
-    margin-top: -32px;
-    height: 32px;
-    color: #959595;
-    width: 100%;
-    text-align: center;
-    font-style: italic;
-    font-size: 0.8em;
-  }
+p {
+  font-family: 'Muli', "Helvetica Neue", Helvetica, sans-serif;
+  display: none;
+  text-align: left;
+  margin: 0.75em auto;
+}
 
-  #spacebar-msg {
-    opacity: 0;
-   }
-
-  #replay-msg {
-    display: none;
-    opacity: 0;
-    cursor: pointer;
-    color: #656565;
-   }
-
-   #replay-msg a, #replay-msg span {
-    text-decoration: underline;
-    color: #656565;
-  }
-
-   .countries-filter {
-    position: absolute;
-    opacity: 0;
-   }
-
-   .countries-selector  {
-    position: absolute;
-    opacity: 0;
-    background: hsla(0,0%,100%,.94);
-    text-align: left;
-   }
-
-   .countries-select {
-    position: absolute;
-    opacity: 0;
-    background: hsla(0,0%,100%,.94);
-    text-align: left;
-    width: 100%;
-   }
-
-   .change-countries  {
-    position: absolute;
-    opacity: 0;
-    background: hsla(0,0%,100%,.94);
-    text-align: left;
-   }
-
-   .change-country-button {
-    position: absolute;
-    opacity: 0;
-    text-align: left;
-    width: 100%;
-    color:#0073e6;
-    overflow:visible;
-    text-transform:none;
-    border: none;
-    background: none;
-   }
+svg text {
+  font-family: 'Muli', "Helvetica Neue", Helvetica, sans-serif;
+  color: #011627;
+  fill: #011627;
+}
 
 
+.countries-filter {
+  position: absolute;
+  opacity: 0;
+  display: block;
+ }
+
+ .countries-selector  {
+  position: absolute;
+  opacity: 0;
+  background: hsla(0,0%,100%,.94);
+  text-align: left;
+  display: block;
+ }
+
+ .countries-select {
+  opacity: 0;
+  background: hsla(0,0%,100%,.94);
+  text-align: left;
+  width: 100%;
+  display: block;
+ }
+
+ .change-countries  {
+  position: absolute;
+  opacity: 0;
+  text-align: left;
+  display: block;
+ }
+
+ .change-country-button {
+  opacity: 0;
+  text-align: left;
+  width: 100%;
+  color:#0073e6;
+  overflow:visible;
+  text-transform:none;
+  border: none;
+  background: none;
+  display: block;
+ }
+
+ .clickable {
+  cursor: pointer;
+  text-decoration: underline;
+ }

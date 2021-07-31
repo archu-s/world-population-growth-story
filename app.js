@@ -16,6 +16,7 @@ const forecast_line_dasharray = "3,4"
 const default_filter_code = "OWID_WRL";
 const default_line_draw_Interval = 10;
 var currentGroup;
+var footerCont;
 const baseTransformGroupName = "baseTransformGroup"
 var countries;
 var currentCode;
@@ -31,24 +32,25 @@ const storyHeaders = {
 
 const storyMessages = {
     "population-1": "Back in history in year 1950, the absolute increase of population was around 47 milion, and it was peaked " +
-        "in the late 1980s to over 90 million additional people each year. And it stayed high until recently.",
-    "population-2": "The change in the world population is determined by two major metrics: the number of babies born, " +
-        "and the number of people dying. So to understand the likely trajectory for population growth lets see how births and deaths are changing.",
+        "in the late 1980s to over 90 million additional people each year. And it stayed high until recently. ",
+    "population-2": "The change in the world population is determined by two major metrics: ",
+    "population-3": " the number of babies born, and the number of people dying. ",
+    "population-4": "So to understand the likely trajectory for population growth lets see how births and deaths are changing... ",
     "birth-1": "Back in history, in year 1950, there were around 97 million birth, and it increased to approx 138 million births per year in late 1980s." +
-        "And even now its around the same approx 140 million births - 43 million more than back in 1950.",
-    "birth-2": "As per medium variant of UN projections shown in above chart the yearly number of births will remain at around 140 million " +
-        "per year over the coming decades. It is then expected to slowly decline in the second-half of the century.",
+        "And even now its around the same approx 140 million births - 43 million more than back in 1950. ",
+    "birth-2": "As per medium variant of UN projections the yearly number of births will remain at around 140 million " +
+        "per year over the coming decades. It is then expected to slowly decline in the second-half of the century. ",
     "death-1": "The number of deaths was around same since 1950 to till late 1990. And it has slightly increased since then. ",
     "death-2": 'As the world population ages, the annual number of deaths is expected to continue to ' +
-        'increase in the coming decades until it reaches a similar annual number as global births towards the end of the century.',
+        'increase in the coming decades until it reaches a similar annual number as global births towards the end of the century. ',
     "st-1": "As per medium variant of UN projections shown above, the number of births is expected to slowly fall and the number of deaths to rise, the global population growth rate will continue to fall.",
     "st-2": "As per UN projection, this is when the world population growth will stop to increase in the future...",
-    "explore": 'To explore, it is possible to change the above view by changing the "Change Country" filter to any country or world region.' +
-        'And a tooltip provided on mouse over to the chart above.'
+    "explore": 'To explore, it is possible to change the above view by changing the "Change country" filter to any country or world region. ' +
+        'And a tooltip provided on mouse over to the chart above. '
 };
 
-const storyLineContent = 'Ever the world population growth will come near to an end?';
-const footerContContent = 'Press [space bar] to continue';
+const storyLineContent = 'Will world population growth ever come near to an end?';
+const footerContContent = 'Press [space bar] to continue.';
 const footerReplayContent = 'Replay';
 const footerDsr = 'Data Source & References';
 const dsrLink = 'https://ourworldindata.org/future-population-growth#births-and-deaths';
@@ -269,11 +271,6 @@ function transitionAxes(data, xScale, yScale, xDataKey) {
 
 function makeBottomAxis(xScale, xData) {
 
-    //  console.log(d3.ticks(xData[0], xData[xData.length-1], 5).concat( xScale.domain() ))
-    /* return d3.axisBottom(xScale)
-     .tickValues(xData.length > n ? d3.ticks(xData[0], xData[xData.length-1], n) : xData)
-         .tickFormat(d => d3.format(".0f")(d));*/
-
     return d3.axisBottom(xScale)
         .tickValues(d3.ticks(xData[0], xData[xData.length - 1], 5).concat(xScale.domain()))
         .tickFormat(d => d3.format(".0f")(d));
@@ -409,8 +406,7 @@ function startStory() {
         .style("display", "block")
         .style("opacity", 1)
         .on("end", () => {
-            d3.select("#footer-content")
-                .text(footerContContent);
+            setupFooter();
         });
 }
 
@@ -515,7 +511,7 @@ function showPopMsg(endAction) {
             msgContent1.text(storyMessages["population-1"])
                 .style("display", "block")
                 .style("opacity", "1");
-        })
+        });
 
     const msgContent2 = d3.selectAll("#msg-content-2");
     msgContent2
@@ -524,10 +520,17 @@ function showPopMsg(endAction) {
         .style("opacity", "0")
         .transition().duration(500)
         .on("end", () => {
-            msgContent2.text(storyMessages["population-2"])
+            msgContent2
+            .text(storyMessages["population-2"])
                 .style("display", "block")
                 .style("opacity", "1");
-        })
+            msgContent2.append('tspan')
+                .style("font-style", "italic")
+                .text(storyMessages["population-3"]);
+            msgContent2.append('tspan')
+                .style("font-weight", "bold")
+                .text(storyMessages["population-4"]);
+        });
 }
 
 function reset_header(headerContent, entityName) {
@@ -662,7 +665,7 @@ function showBirthMsgs() {
         .style("opacity", "0")
         .transition().duration(500)
         .on("end", () => {
-            msgContent2.text(storyMessages["population-2"])
+            msgContent2.text(storyMessages["birth-2"])
                 .style("display", "block")
                 .style("opacity", "1");
         });
@@ -1507,7 +1510,6 @@ function drawExplorerScene(code) {
     d3.select(".change-country-button")
         .on('click', () => {
             d3.select(".change-country-button")
-                // .text("Select Country")
                 .style("opacity", 0);
         });
 
@@ -1515,18 +1517,37 @@ function drawExplorerScene(code) {
         .property('disabled', false)
         .on('change', () => {
             d3.select(".change-country-button")
-                //   .text("Change Country")
                 .style("opacity", 1);
             selectValue = d3.select('select').property('value');
             console.log(d3.select('select').property('value'))
             explorerScene(selectValue);
         });
+}
 
+function setupFooter() {
+   
+    footerCont = d3.select("#footer")
+    .append("span")
+    .attr("class", "footer-cont")
+    .text(footerContContent + " | ");
 
+    d3.select("#footer")
+    .append("span")
+    .attr("class", "clickable")
+    .text(footerReplayContent)
+    .on('click', function () {
+        location.reload();
+    });
 
-    //Label
-    //ToolTip
-    //Annotation
+    d3.select("#footer")
+    .append("span")
+    .text(" | ");
+
+    d3.select("#footer")
+    .append("a")
+    .attr("href", dsrLink)
+    .text(footerDsr)
+    .style("color", "#959595;");
 }
 
 function addSpaceBarListner(onPressAction) {
@@ -1589,31 +1610,7 @@ function SpaceBarPressedAction() {
             showExplorerMsgs();
             drawExplorerScene(default_filter_code);
 
-            var spaceMsg = d3.select('#spacebar-msg');
-            var resetMsg = d3.select('#replay-msg');
-            var replayBtn = d3.select('#replay-msg');
-            spaceMsg.transition().style('opacity', 0);
-            resetMsg.style('display', 'block').transition().style('opacity', 1);
-            replayBtn.on('click', function () {
-                location.reload();
-            });
-
-            d3.select("#footer-content")
-            .attr("class", "clickable")
-            .text(footerReplayContent)
-            .on('click', function () {
-                location.reload();
-            });
-
-            d3.select("#footer")
-            .append("span")
-            .text(" | ");
-
-            d3.select("#footer")
-            .append("a")
-            .attr("href", dsrLink)
-            .text(footerDsr)
-            .style("color", "#959595;");
+            footerCont.transition().remove();
         });
     }
 

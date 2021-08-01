@@ -78,7 +78,7 @@ function uniqueCountries(data) {
 function formatTicks(d) {
     d = d3.format(".2f")(d);
 
-    if (d < 1000000 && d > -1000000) {
+    if (d < 1000000 && d > (1000000 * -1)) {
         return d;
     }
 

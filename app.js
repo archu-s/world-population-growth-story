@@ -31,7 +31,7 @@ const storyHeaders = {
 }
 
 const storyMessages = {
-    "population-1": "Back in history in year 1950, the absolute increase of population was around 47 milion, and it was peaked " +
+    "population-1": "Back in the history in year 1950, the absolute increase of population was around 47 milion, and it was peaked " +
         "in the late 1980s to over 90 million additional people each year. And it stayed high until recently. ",
     "population-2": "The change in the world population is determined by two major metrics: ",
     "population-3": " the number of babies born, and the number of people dying. ",
@@ -49,7 +49,7 @@ const storyMessages = {
         'And a tooltip provided on mouse over to the chart above. '
 };
 
-const storyLineContent = 'Will world population growth ever come near to an end?';
+const storyLineContent = "Will world's population growth ever come near to an end?";
 const footerContContent = 'Press [space bar] to continue.';
 const footerReplayContent = 'Replay';
 const footerDsr = 'Data Source & References';
@@ -596,7 +596,7 @@ function add_2019_pop_annotation() {
         .style("fill", "#959595")
         .style("font-size", "0.75em");
     annotation_2019_text.append('tspan')
-        .text("Stayed high util ");
+        .text("Stayed high until ");
     annotation_2019_text.append('tspan')
         .style("font-weight", "bold")
         .text("2019");

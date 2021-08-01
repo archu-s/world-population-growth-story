@@ -2,6 +2,7 @@ body, html {
   background: #f2f4f7;
   color: #011627;
   font-family: 'Muli', "Helvetica Neue", Helvetica, sans-serif;
+  overflow-x:hidden;
 }
 
 .container {
@@ -21,7 +22,7 @@ body, html {
 
 .footer {
 
-  color: #959595;
+  color: #551A8B;
   text-align: center;
   font-style: italic;
   font-size: 0.8em;

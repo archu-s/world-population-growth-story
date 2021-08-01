@@ -49,7 +49,7 @@ const storyMessages = {
         'and a tooltip is provided on mouse hover in the chart above. '
 };
 
-const storyLineContent = "Will world's population growth ever come near to an end?";
+const storyLineContent = "Will the world's population growth ever come near to an end?";
 const footerContContent = 'Press [space bar] to continue.';
 const footerReplayContent = 'Replay';
 const footerDsr = 'Data Source & References';

@@ -27,7 +27,7 @@ const storyHeaders = {
     "birth": "How many are born each year?",
     "death": "How many die each year?",
     "story-summary": "What does this mean for world population growth?",
-    "explore": "Explore By YourSelf"
+    "explore": "Explore by Yourself"
 }
 
 const storyMessages = {
@@ -36,17 +36,17 @@ const storyMessages = {
     "population-2": "The change in the world population is determined by two major metrics: ",
     "population-3": " the number of babies born, and the number of people dying. ",
     "population-4": "So to understand the likely trajectory of population growth, let's see how births and deaths are changing... ",
-    "birth-1": "Back in history, in year 1950, there were around 97 million birth, and it increased to approx 138 million births per year in late 1980s." +
-        "And even now its around the same approx 140 million births - 43 million more than back in 1950. ",
+    "birth-1": "Back in history, in year 1950, there were around 97 million births and it increased to approx 138 million births per year in late 1980s." +
+        "Even now it's the same approx 140 million births - 43 million more than back in 1950. ",
     "birth-2": "As per medium variant of UN projections the yearly number of births will remain at around 140 million " +
         "per year over the coming decades. It is then expected to slowly decline in the second-half of the century. ",
-    "death-1": "The number of deaths was around same since 1950 to till late 1990. And it has slightly increased since then. ",
+    "death-1": "The number of deaths was around same since 1950 to late 1990s. And it has slightly increased since then. ",
     "death-2": 'As the world population ages, the annual number of deaths is expected to continue to ' +
         'increase in the coming decades until it reaches a similar annual number as global births towards the end of the century. ',
     "st-1": "As per medium variant of UN projections shown above, the number of births is expected to slowly fall and the number of deaths to rise, the global population growth rate will continue to fall.",
     "st-2": "As per UN projection, this is when the world population growth will stop to increase in the future...",
-    "explore": 'To explore, it is possible to change the above view by changing the "Change country" filter to any country or world region. ' +
-        'And a tooltip provided on mouse over to the chart above. '
+    "explore": 'To explore, it is possible to change the above view by changing the "Change country" filter to any country or world region ' +
+        'and a tooltip is provided on mouse hover in the chart above. '
 };
 
 const storyLineContent = "Will world's population growth ever come near to an end?";
@@ -78,7 +78,7 @@ function uniqueCountries(data) {
 function formatTicks(d) {
     d = d3.format(".2f")(d);
 
-    if (d < 1000000) {
+    if (d < 1000000 || d > -1000000) {
         return d;
     }
 
@@ -547,6 +547,9 @@ function reset_header(headerContent, entityName) {
         .text(headerContent)
         .style("display", "block")
         .style("opacity", "1");
+
+    var subHeader = d3.select("#chart-sub-header-content");
+    subHeader.text("");
 }
 
 function add_sub_header() {
@@ -888,7 +891,7 @@ function transition_birth_annotation() {
         .text("2099: ")
     birth_decline_annotation_text
         .append('tspan')
-        .text("Projected to decline ")
+        .text("Projected to decline, ")
         .append('tspan')
         .attr("y", -10)
         .attr("x", xScale(2099))
@@ -938,10 +941,6 @@ function drawDeathScene(code) {
         .style('font-weight', '500')
         .style("font-size", "0.8em")
         .text("Deaths")
-    /*  .append('tspan')
-      .attr("x", xScale(yearMax+1))
-      .attr("y", yScale(death_yearmax) +30)
-      .text("Deaths per year");*/
     lineLabel.transition().duration(500).attr('opacity', 1);
     //Annotation
     add_death_annotation()
@@ -1327,11 +1326,11 @@ function birth_death_annotation() {
         .text("2099: ")
     annotation_2099_text
         .append('tspan')
-        .text("Projected Birth: 125 Million. ")
+        .text("Projected Births: 125 Million. ")
         .append('tspan')
         .attr("y", -10)
         .attr("x", xScale(2099))
-        .text("Projected Birth: 121 Million. ")
+        .text("Projected Deaths: 121 Million. ")
     annotation_2099.transition().duration(500).attr('opacity', 1);
 }
 

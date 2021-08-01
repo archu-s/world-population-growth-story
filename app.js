@@ -35,7 +35,7 @@ const storyMessages = {
         "in the late 1980s to over 90 million additional people each year. And it stayed high until recently. ",
     "population-2": "The change in the world population is determined by two major metrics: ",
     "population-3": " the number of babies born, and the number of people dying. ",
-    "population-4": "So to understand the likely trajectory for population growth lets see how births and deaths are changing... ",
+    "population-4": "So to understand the likely trajectory of population growth, let's see how births and deaths are changing... ",
     "birth-1": "Back in history, in year 1950, there were around 97 million birth, and it increased to approx 138 million births per year in late 1980s." +
         "And even now its around the same approx 140 million births - 43 million more than back in 1950. ",
     "birth-2": "As per medium variant of UN projections the yearly number of births will remain at around 140 million " +

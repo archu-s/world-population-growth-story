@@ -1349,6 +1349,9 @@ function drawPopulationEndLine(code) {
 function explorerScene(code) {
     drawBirthAndDeathChart(code);
     drawPopulationEndLine(code);
+    var entity = countries.find(c => c.code === code).entity;
+    reset_header("Population Growth, number of births and deaths per year", entity);
+    add_sub_header();
     explorerSceneToolTip(code);
 }
 
@@ -1602,6 +1605,8 @@ function SpaceBarPressedAction() {
     if (spaceBarPressCount === 7) {
         showEndPopMsgs();
         drawPopulationEndLine(default_filter_code);
+        reset_header("Population Growth, number of births and deaths per year", "World");
+        add_sub_header();
     }
 
     if (spaceBarPressCount === 8) {

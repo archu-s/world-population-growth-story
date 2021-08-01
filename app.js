@@ -45,7 +45,7 @@ const storyMessages = {
         'increase in the coming decades until it reaches a similar annual number as global births towards the end of the century. ',
     "st-1": "As per medium variant of UN projections shown above, the number of births is expected to slowly fall and the number of deaths to rise, the global population growth rate will continue to fall.",
     "st-2": "As per UN projection, this is when the world population growth will stop to increase in the future...",
-    "explore": 'To explore, it is possible to change the above view by changing the "Change country" filter to any country or world region ' +
+    "explore": 'To explore, it is possible to change the above view by changing the "Change country or world region" filter to any country or world region ' +
         'and a tooltip is provided on mouse hover in the chart above. '
 };
 
